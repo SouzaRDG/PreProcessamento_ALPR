@@ -13,6 +13,7 @@ import numpy as np
 import virtualenv
 import scipy
 import matplotlib
+import PlacasTeste
 
 
 GAUSSIAN_SMOOTH_FILTER_SIZE = (5, 5)    #DEFININDO ALGUNS VALORES
@@ -130,14 +131,16 @@ imgBit = cv2.bitwise_not(imgThresh)
 image = cv2.imread('1.png')
 imgGray = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
 imgAltoCon = altoCont(imgGray)
-n,imgThresh = cv2.threshold(imgAltoCon,130,255,cv2.THRESH_BINARY_INV,cv2.THRESH_OTSU)
-#n,thresh = cv2.threshold(gray,140,255,cv2.THRESH_BINARY_INV,cv2.ADAPTIVE_THRESH_MEAN_C)
-kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
-dilated = cv2.dilate(imgThresh,kernel,iterations=1)
+n,imgThresh = cv2.threshold(imgAltoCon,135,255,cv2.THRESH_BINARY,cv2.THRESH_OTSU)
+n,imgThresh2 = cv2.threshold(imgThresh,145,255,cv2.THRESH_BINARY_INV,cv2.ADAPTIVE_THRESH_MEAN_C)
+kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (2, 2))
+dilated = cv2.dilate(imgThresh2,kernel,iterations=1)
 contours, harch = cv2.findContours(dilated,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 
 
-for contour in contours:
+listaPlacas = list()
+
+for  contour in contours:
     [x,y,w,h] = cv2.boundingRect(contour)
     if h>250 and w>250:
         continue
@@ -145,12 +148,25 @@ for contour in contours:
         continue
     cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,255),2)
 
+    novaPlaca = PlacasTeste.PlacasTeste(x, y, w, h, image[y:y+h,x:x+w])
+
+    listaPlacas.append(novaPlaca)
+
+for placa in listaPlacas:
+
+    cv2.imshow(placa.nome,placa.image)
+
+
+   # podeserplaca = image[y:y+h,x:x+w]
+   # text = (f"pode ser {index}")
+   # cv2.imshow(text,podeserplaca)
 
 
 
 
 
-cv2.imshow("image", image)
+
+#cv2.imshow("image", image)
 #cv2.imshow("gray",gray)
 #cv2.imshow("thresh", thresh)
 #cv2.imshow("dilated", dilated)
