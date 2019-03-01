@@ -148,7 +148,7 @@ for  contour in contours:
         continue
     cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,255),2)
 
-    novaPlaca = PlacasTeste.PlacasTeste(x, y, w, h, image[y:y+h,x:x+w])
+    novaPlaca = PlacasTeste.PlacasTeste(x, y, w, h, dilated[y:y+h,x:x+w])
 
     listaPlacas.append(novaPlaca)
 
