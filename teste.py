@@ -147,7 +147,9 @@ for contour in contours:
 
 
 
-
+"""
+APENAS UM TESTE
+"""
 
 
 cv2.imshow("image", image)
