@@ -8,6 +8,8 @@
 
 import cv2
 import PlacasTeste
+import pytesseract
+
 
 GAUSSIAN_SMOOTH_FILTER_SIZE = (5, 5)    #DEFININDO ALGUNS VALORES
 ADAPTIVE_THRESH_BLOCK_SIZE = 19
@@ -160,10 +162,11 @@ for  contour in contours:
 for placa in listaPlacas:
 
     cv2.imshow(placa.nome,placa.image)
+    #cv2.imwrite(placa.nome + '.png', placa.image)
 
+    
 
-
-   # podeserplaca = image[y:y+h,x:x+w]
+# podeserplaca = image[y:y+h,x:x+w]
    # text = (f"pode ser {index}")
    # cv2.imshow(text,podeserplaca)
 
