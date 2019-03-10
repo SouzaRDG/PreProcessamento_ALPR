@@ -1,5 +1,12 @@
 
 
+
+################# PAREI de USAR PORQUE ESTA BAGUNÇADO!!!############
+
+
+##### USANDO TESTE_IMAGENS, DEPOIS FOCO EM VIDEOS!!!!###############
+
+
 ###### TENHAM CERTEZA QUE ESTÃO USANDO PYTHON 3 OU MAIOR
 
 
@@ -7,8 +14,14 @@
 ### -------- BIBLIOTECAS --------
 
 import cv2
+from skimage import measure
+from skimage.transform import resize
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 import PlacasTeste
-import pytesseract
+from sklearn.svm import SVC
+from sklearn.model_selection import cross_val_score
+from sklearn.externals import joblib
 
 
 GAUSSIAN_SMOOTH_FILTER_SIZE = (5, 5)    #DEFININDO ALGUNS VALORES
@@ -164,21 +177,36 @@ for placa in listaPlacas:
     cv2.imshow(placa.nome,placa.image)
     #cv2.imwrite(placa.nome + '.png', placa.image)
 
-    
+    fig, ax1 = plt.subplots(1)
+    ax1.imshow(placa.image, cmap="gray")
 
-# podeserplaca = image[y:y+h,x:x+w]
-   # text = (f"pode ser {index}")
-   # cv2.imshow(text,podeserplaca)
+    labelled_plate = measure.label(placa.image)
 
+    characters = []
+    counter = 0
+    column_list = []
 
+    for regions in measure.regionprops(labelled_plate):
+        y0, x0, y1, x1 = regions.bbox
+        region_height = y1 - y0
+        region_width = x1 - x0
 
+        roi = placa.image[y0:y1, x0:x1]
 
+        rect_border = patches.Rectangle((x0, y0), x1 - x0, y1 - y0, edgecolor="red", linewidth=2, fill=False)
+        ax1.add_patch(rect_border)
 
+        resized_char = resize(roi, (20, 20))
+        characters.append(resized_char)
 
-cv2.imshow("image", image)
-# #cv2.imshow("gray",gray)
-# #cv2.imshow("thresh", thresh)
-cv2.imshow("dilated", dilated)
+        column_list.append(x0)
+
+        plt.show()
+
+# cv2.imshow("image", image)
+# # #cv2.imshow("gray",gray)
+# # #cv2.imshow("thresh", thresh)
+# cv2.imshow("dilated", dilated)
 
 
 
